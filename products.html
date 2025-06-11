@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Keerthana's Product Listing</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: #f1f3f6;
+      color: #333;
+    }
+
+    header {
+      background: #2874f0;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .filters {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filters select, .filters input {
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      min-width: 180px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      padding: 15px;
+      transition: 0.3s;
+    }
+
+    .product-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .product-card img {
+      max-width: 100%;
+      border-radius: 10px;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .product-card h3 {
+      margin: 10px 0;
+      font-size: 18px;
+    }
+
+    .product-card p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    .product-card .price {
+      color: #e91e63;
+      font-weight: 600;
+      margin: 10px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      background: #2874f0;
+      color: white;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>FAV-CART 🛒🛍 </header>
+  <div class="container">
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="Search products..." oninput="filterProducts()" />
+      <select id="categoryFilter" onchange="filterProducts()">
+        <option value="all">All Categories</option>
+        <option value="electronics">Electronics</option>
+        <option value="fashion">Fashion</option>
+        <option value="books">Books</option>
+      </select>
+      <select id="sortFilter" onchange="filterProducts()">
+        <option value="default">Sort By</option>
+        <option value="low">Price: Low to High</option>
+        <option value="high">Price: High to Low</option>
+        <option value="rating">Rating: High to Low</option>
+      </select>
+    </div>
+    <div class="products" id="productContainer">
+      <!-- Product cards inserted dynamically -->
+    </div>
+  </div>
+  <footer>
+    &copy; 2025 FAV-CART | Product Listing Page | All rights reserved
+  </footer>
+
+  <script>
+    const products = [
+      { name: "Smartphone", category: "electronics", price: 14999, rating: 4.5, img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcSn1Gg14pYcjs-gTJbbfgSoCPzIkU3kWuAuWZtH3NjRMhITRdeQfNOHl1wwIU08U_TL2cqcH-lZGGwpTos6eoW5ilTcqwf0S7ymSSQy7zwW" },
+      { name: "Jeans", category: "fashion", price: 999, rating: 4.0, img: "https://sp.yimg.com/ib/th?id=OPHS.0urUkkJydlA%2f8Q474C474&o=5&pid=21.1"},
+      { name: "Bluetooth Speaker", category: "electronics", price: 2999, rating: 4.2, img : "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQ-Kl8xJU9L-oFABXxdImJeYl2aCQXo6Nj0J9O84zzenlGKJ8W6AMR7wGUl9pPw0AM8GSS_W330l7XyX18w_8eSq5MB2Il9z58_e6RQ22jqsgGYFBxYGI7IT0E" },
+      { name: "Novel - Tech Life", category: "books", price: 499, rating: 4.8, img: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQIQeejyQDpH-kHzGUHJC6DbS5V7bWlCcu4NFW-200TdkJdZyHQuNyjbKNhAYRHhOlN9qxNjHygY-MwUt5OOAjkLrzvioUOur4QEsDxvvLV00k7gAL0I5erew" },
+      { name: "Smart Watch", category: "electronics", price: 2499, rating: 4.1, img: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQSqe0_1U3Cg9y0YIXRx-4H8dSeUkdCtpNHxCHQer9pruODM5MwuWN9VQ9y4N7XFCZtP8AHpkU2wZqUd7xATSzB1F94UgpArKDqpds24CNnmD0iavogQcjO" },
+      { name: "T-Shirt", category: "fashion", price: 599, rating: 3.9, img: "https://sp.yimg.com/ib/th?id=OPHS.PNSLSKOeKh5I3Q474C474&o=5&pid=21.1" },
+      { name: "Footwear", category: "fashion", price: 699, rating: 4.9,img: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcT4fRqHHj3pQbJz_hGSSd0VROnR0ZO0UNiKF_7mOP56lymXjJE2cnbc9EExVp3xNkeyysCzEMn2dAaSyi_nj79JaU58sZRX5zyfQ-tzkknsKyNShZTVqP_NtA" },
+    ];
+
+    function renderProducts(items) {
+      const container = document.getElementById("productContainer");
+      container.innerHTML = items.map(item => `
+        <div class="product-card">
+          <img src="${item.img}" alt="${item.name}" />
+          <h3>${item.name}</h3>
+          <p class="price">Rs. ${item.price}</p>
+          <p>Rating: ${item.rating} ⭐</p>
+          <p>Category: ${item.category.charAt(0).toUpperCase() + item.category.slice(1)}</p>
+        </div>
+      `).join("");
+    }
+
+    function filterProducts() {
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const category = document.getElementById("categoryFilter").value;
+      const sort = document.getElementById("sortFilter").value;
+
+      let filtered = products.filter(product =>
+        product.name.toLowerCase().includes(search) &&
+        (category === "all" || product.category === category)
+      );
+
+      if (sort === "low") filtered.sort((a, b) => a.price - b.price);
+      if (sort === "high") filtered.sort((a, b) => b.price - a.price);
+      if (sort === "rating") filtered.sort((a, b) => b.rating - a.rating);
+
+      renderProducts(filtered);
+    }
+
+    window.onload = () => renderProducts(products);
+  </script>
+</body>
+</html>
